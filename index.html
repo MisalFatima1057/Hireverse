@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HireVerse - Find Your Dream Job</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4f46e5', // indigo-600
+            accent: '#22c55e' // green-500
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Glassmorphism for cards */
+   .glass {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    /* Smooth transitions */
+    * { transition: background-color 0.3s, color 0.3s; }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container" class="fixed top-5 right-5 z-[100] space-y-2"></div>
+
+  <!-- NAVBAR -->
+  <nav class="bg-white/80 dark:bg-gray-800/80 glass shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <a href="index.html" class="text-2xl font-bold text-primary">Hire<span class="text-gray-800 dark:text-white">Verse</span></a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center gap-6">
+          <a href="index.html" class="hover:text-primary">Find Jobs</a>
+          <a href="dashboard.html" class="hover:text-primary">For Companies</a>
+          <a href="resume-builder.html" class="hover:text-primary">Resume Builder</a>
+        </div>
+
+        <!-- Right Side -->
+        <div class="flex items-center gap-3">
+          <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
+            <i data-lucide="moon" class="w-5 h-5 dark:hidden"></i>
+            <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+          </button>
+          <a href="auth.html" id="auth-btn" class="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700">Login</a>
+
+          <!-- Mobile Menu Button -->
+          <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg bg-gray-200 dark:bg-gray-700">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
+        <a href="index.html" class="block px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Find Jobs</a>
+        <a href="dashboard.html" class="block px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">For Companies</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO + SEARCH -->
+  <section class="bg-primary text-white py-20">
+    <div class="max-w-4xl mx-auto text-center px-4">
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Find Your Next Career Opportunity</h2>
+      <p class="text-lg mb-8 text-indigo-200">Join thousands of companies and job seekers on HireVerse</p>
+      <div class="bg-white/90 dark:bg-gray-800/90 p-2 rounded-xl flex flex-col sm:flex-row gap-2 shadow-2xl">
+        <div class="flex items-center w-full bg-white dark:bg-gray-700 rounded-lg px-3">
+          <i data-lucide="search" class="w-5 h-5 text-gray-400"></i>
+          <input id="searchInput" type="text" placeholder="Job title, keyword, or company" class="w-full p-3 bg-transparent text-gray-800 dark:text-white outline-none">
+        </div>
+        <button id="searchBtn" class="bg-primary px-8 py-3 rounded-lg font-bold hover:bg-indigo-700 flex items-center justify-center gap-2">
+          <i data-lucide="search" class="w-5 h-5"></i> Search
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+    <!-- FILTERS SIDEBAR -->
+    <aside class="lg:col-span-1">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg sticky top-24">
+        <h3 class="font-bold text-xl mb-6 flex items-center gap-2"><i data-lucide="sliders-horizontal" class="w-5 h-5"></i> Filters</h3>
+
+        <div class="space-y-6">
+          <!-- Job Type -->
+          <div>
+            <label class="font-semibold mb-2 block">Job Type</label>
+            <select id="typeFilter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
+              <option value="all">All Types</option>
+              <option value="Remote">Remote</option>
+              <option value="On-site">On-site</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <label class="font-semibold mb-2 block">Location</label>
+            <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg px-3 bg-gray-50 dark:bg-gray-700">
+              <i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i>
+              <input id="locationFilter" type="text" placeholder="e.g. Lahore" class="w-full p-2 bg-transparent outline-none">
+            </div>
+          </div>
+
+          <button id="clearFilters" class="w-full text-center text-primary font-semibold hover:underline">Clear All Filters</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- JOB LISTINGS -->
+    <main class="lg:col-span-3">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="resultsCount" class="text-xl font-bold">All Jobs</h3>
+      </div>
+      <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- JS will inject job cards here -->
+      </div>
+      <p id="noResults" class="text-center text-gray-500 mt-10 hidden">No jobs found. Try clearing filters.</p>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-10">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-center text-gray-500">
+      © 2026 HireVerse. Built with HTML, Tailwind & JS.
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
